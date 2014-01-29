@@ -1,0 +1,176 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>JustClust User Manual</title>
+</head>
+
+<body>
+
+<center><img src="file:///home/local/wuaz008/NetBeansProjects/JustClust/src/web/justclust_icon.png" /></center>
+
+<h1>JustClust User Manual</h1>
+
+<h2>Contents</h2>
+<p>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#installing_justclust">1. Installing JustClust</a>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#running_justclust">2. Running JustClust</a>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#using_justclust">3. Using JustClust</a>
+	<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#creating_a_network">3.1. Creating a Network</a>
+		<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#clustering_a_network">3.2. Clustering a Network</a>
+		<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#apply_a_layout">3.3. Applying a Layout</a>
+		<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#saving_and_loading_a_session">3.4. Saving and Loading a Session</a>
+</p>
+
+<a name="installing_justclust"><h2>1. Installing JustClust</h2></a>
+<p>
+	To install and run JustClust, you need Java, which you can download <a href="http://java.com/en/download/index.jsp">here</a>.
+</p>
+<p>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1. Download the <a href="file:///home/local/wuaz008/NetBeansProjects/JustClust/src/web/JustClustInstaller.jar">installer</a> for JustClust
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. Open your computer's command line interface
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3. Browse to the directory which contains the installer
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4. Run the installer with 'java -jar JustClustInstaller.jar'
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5. Follow the instructions in the installation wizard
+</p>
+
+<a name="running_justclust"><h2>2. Running JustClust</h2></a>
+
+<p>
+	JustClust should be accessible from your desktop and/or your application menu.
+	<br>
+	The following steps describe another way to start JustClust.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1. Open your computer's command line interface
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. Browse to the directory which contains the JustClust.jar file which was created during installation
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3. Run JustClust with 'java -jar JustClust.jar'
+</p>
+
+<a name="using_justclust"><h2>3. Using JustClust</h2></a>
+<p>
+	There are four main stages in using JustClust.
+</p>
+<p>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Creating a network from data in a file on your computer
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Clustering a network
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Applying a layout to the network
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Saving and loading the current session so that the above stages do not have to be repeated
+</p>
+<p>
+	The following sections will describe these in detail.
+</p>
+
+<a name="creating_a_network"><h3>3.1. Creating a Network</h3></a>
+<p>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1. To create a network, while in the program, go to 'File' > 'New Network from File...'
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. A box will appear with fields which you must fill in order to read data into JustClust
+	<br>
+	<br>
+	<img src="file:///home/local/wuaz008/NetBeansProjects/JustClust/src/web/justclust_screenshot_4.png" />
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3. Click on the 'Browse...' button and select the file on your computer which you would like JustClust to read
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4. The 'File Parser' drop-down box will be populated with file parsers
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5. Choose one of the file parsers in the 'File Parser' drop-down box
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6. Click on the 'Create Network' button
+</p>
+
+<a name="clustering_a_network"><h3>3.2. Clustering a Network</h3></a>
+<p>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1. To cluster a network, while in the program, go to 'Cluster Analysis' > 'Cluster Network...'
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. A box will appear with fields which you must fill in order to cluster the network
+	<br>
+	<br>
+	<img src="file:///home/local/wuaz008/NetBeansProjects/JustClust/src/web/justclust_screenshot_5.png" />
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3. Choose one of the clustering algorithms in the 'Clustering Algorithm' drop-down box
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4. Click on the 'Cluster Network' button
+</p>
+<p>
+	The above steps will create a new tab in JustClust which will contain the clustering.
+</p>
+
+<a name="applying_a_layout"><h3>3.3. Applying a Layout</h3></a>
+<p>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1. To change the layout of a network, while in the program, go to 'Visualisation' > 'Apply Layout...'
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. A box will appear with fields which you must fill in order to apply a layout to the network
+	<br>
+	<br>
+	<img src="file:///home/local/wuaz008/NetBeansProjects/JustClust/src/web/justclust_screenshot_6.png" />
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3. Choose one of the visualisation layouts in the 'Visualisation Layout' drop-down box
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4. Click on the 'Apply Layout' button
+</p>
+<p>
+	You can also manually change the layout of a network by left-clicking on nodes and dragging them around.
+	<br>
+	Other controls for the network include zooming by holding down the right mouse button and moving the mouse vertically, and panning with the keyboard arrow keys.
+</p>
+
+<a name="saving_and_loading_a_session"><h3>3.4. Saving and Loading a Session</h3></a>
+<p>
+	Your current session in JustClust can be saved and loaded into/from files on your computer.
+</p>
+<p>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1. To save a session, while in the program, go to 'File' > 'Save' > 'Session...'
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. A box will appear with fields which you must fill in order to save the session
+	<br>
+	<br>
+	<img src="file:///home/local/wuaz008/NetBeansProjects/JustClust/src/web/justclust_screenshot_7.png" />
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3. Click on the 'Browse...' button and enter the name of the file you would like to save into
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4. Click on the 'Save Session' button
+</p>
+<p>
+	You can also save the graph image which is currently visible into an image file.
+	<br>
+	To do this, go to 'File' > 'Export' > 'Graph as Image File...' and enter the name of the file you would like to save into.
+</p>
+<p>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1. To load a session, while in the program, go to 'File' > 'Load' > 'Session...'
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. A box will appear with fields which you must fill in order to load the session
+	<br>
+	<br>
+	<img src="file:///home/local/wuaz008/NetBeansProjects/JustClust/src/web/justclust_screenshot_8.png" />
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3. Click on the 'Browse...' button and select the file on your computer which you would like JustClust to read
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4. Click on the 'Load Session' button
+</p>
+
+</body>
+
+</html>   
+

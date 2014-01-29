@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<shortcuts>
+    <programGroup defaultName="JustClust" location="applications"/>
+    <shortcut
+        name="JustClust"
+        target="$INSTALL_PATH/JustClust.jar"
+        commandLine=""
+        workingDirectory="$INSTALL_PATH"
+        description="JustClust, a tool for clustering biological data"
+        iconFile="$INSTALL_PATH/img/justclust_icon.png"
+        iconIndex="0"
+        initialState="normal"
+        programGroup="yes"
+        desktop="yes"
+        applications="yes"
+        startMenu="yes"
+        startup="no"
+        type="Application"
+        encoding="UTF-8">
+        <createForPack name="Documentation-html"/>
+    </shortcut>
+</shortcuts>

@@ -1,0 +1,970 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>JustClust Plug-in Development Manual</title>
+</head>
+
+<body>
+
+<center><img src="file:///home/local/wuaz008/NetBeansProjects/JustClust/src/web/justclust_icon.png" /></center>
+
+<h1>JustClust Plug-in Development Manual</h1>
+
+<h2>Contents</h2>
+<p>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#writing_a_parsing_plugin">1. Writing a Parsing Plug-in</a>
+	<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#the_getname_method_parsing">1.1. The getName Method</a>
+		<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#the_getconfigurationcontrols_method_parsing">1.2. The getConfigurationControls Method</a>
+		<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#the_parsefile_method_parsing">1.3. The parseFile Method</a>
+		<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#example_code_parsing">1.4. Example Code</a>
+		<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#writing_a_clustering_plugin">2. Writing a Clustering Plug-in</a>
+	<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#the_getname_method_clustering">2.1. The getName Method</a>
+		<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#the_getconfigurationcontrols_method_clustering">2.2. The getConfigurationControls Method</a>
+		<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#the_clusternetwork_method_clustering">2.3. The clusterNetwork Method</a>
+		<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#example_code_clustering">2.4. Example Code</a>
+		<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#writing_a_visualisation_plugin">3. Writing a Visualisation Plug-in</a>
+	<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#the_getname_method_visualisation">3.1. The getName Method</a>
+		<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#the_getconfigurationcontrols_method_visualisation">3.2. The getConfigurationControls Method</a>
+		<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#the_applylayout_method_visualisation">3.3. The applyLayout Method</a>
+		<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#example_code_visualisation">3.4. Example Code</a>
+</p>
+
+<a name="writing_a_parsing_plugin"><h2>1. Writing a Parsing Plug-in</h2></a>
+<p>
+	To write a parsing plug-in for JustClust, you need to have a class which implements the FileParserPlugin interface from JustClust (justclust.plugins.interfaces.FileParserPlugin).
+	<br>
+	The class which implements the FileParserPlugin interface needs to be contained in a jar file.
+	<br>
+	The class should have the same directory structure within the jar file as its package structure (e.g. the class package.subpackage.class should have the file path package/subpackage/class within the jar file).
+	<br>
+	The jar file is your plug-in and can contain other classes which are used by the class which implements the FileParserPlugin interface.
+	<br>
+	<br>
+	The FileParsingPlugin interface requires the implementing class to have three methods.
+	<br>
+	These are explained below.
+</p>
+
+<a name="the_getname_method_parsing"><h3>1.1. The getName Method</h3></a>
+<p>
+	The getName method should simply return a String.
+	<br>
+	This String is displayed to the user as the name of the plug-in when it is loaded.
+</p>
+
+<a name="the_getconfigurationcontrols_method_parsing"><h3>1.2. The getConfigurationControls Method</h3></a>
+<p>
+	The getConfigurationControls method should return an ArrayList of PluginConfigurationControls (justclust.plugins.configurationcontrols.PluginConfigurationControl).
+	<br>
+	These PluginConfigurationControls are shown to the user to allow them to input information which your plug-in can read and act on accordingly, effectively allowing the user to configure your plug-in.
+	<br>
+	If you do not want your plug-in to be configurable by the user, simply return an empty ArrayList of PluginConfigurationControls.
+	<br>
+	<br>
+	There are currently three types of PluginConfigurationControls: ComboBoxControls (justclust.plugins.configurationcontrols.ComboBoxControl), FileSystemPathControls (justclust.plugins.configurationcontrols.FileSystemPathControl), and TextFieldControls (justclust.plugins.configurationcontrols.TextFieldControl).
+	<br>
+	all of these classes implement the PluginConfigurationControl interface and so can be added to the ArrayList of PluginConfigurationControls which is to be returned.
+	<br>
+	<br>
+	Before you return the ArrayList, you may want to specify a few things about the PluginConfigurationControls within by assigning values to their fields.
+	<br>
+	<br>
+	ComboBoxControls have three fields.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The label field contains a String which is the label which will appear before the control to describe what the user should input into the control.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The options field contains an ArrayList of Strings each of which is one of the options which the user can select from in the ComboBoxControl.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The selectedOptionIndex field contains an int which is the index of the String in the options field ArrayList which is initially selected (a default value).
+	<br>
+	<br>
+	FileSystemPathControls have three fields.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The label field contains a String which is the label which will appear before the control to describe what the user should input into the control.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The text field contains a String which is the text which is initially within the control (a default value).
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The directoriesOnly field contains a boolean which is true if the file system path specified by the user should be a path to a directory rather than a file.
+	<br>
+	<br>
+	TextFieldControls have two fields.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The label field contains a String which is the label which will appear before the control to describe what the user should input into the control.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The text field contains a String which is the text which is initially within the control (a default value).
+	<br>
+	<br>
+	Once the user has input into the PluginConfigurationControls which you specified in this method, and has clicked on the 'Create Network' button, the user's input will be made accessible to your plug-in via the fields of the PluginConfigurationControls.
+	<br>
+	The selectedOptionIndex field of ComboBoxControls is updated to the index of the String in the options field ArrayList which is selected by the user.
+	<br>
+	The text field of FileSystemPathControls is updated to the text which is input into the control by the user.
+	<br>
+	The text field of TextFieldControls is updated to the text which is input into the control by the user.
+</p>
+
+<a name="the_parsefile_method_parsing"><h3>1.3. The parseFile Method</h3></a>
+<p>
+	The parseFile method takes a File (java.io.File) as a parameter which is the file to be parsed.
+	<br>
+	The method should update the networkNodes field of the Data class from JustClust (justclust.Data) with an ArrayList of Nodes (justclust.datastructures.Node) which each represent a node in the network being created.
+	<br>
+	The method should also update the networkEdges field of the Data class with an ArrayList of Edges (justclust.datastructures.Edge) which each represent an edge in the network being created.
+	<br>
+	<br>
+	Nodes have three fields.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The identifier field contains a String which is the label of the node. This should be initialised by parsing plug-ins.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The edges field contains an ArrayList of Edges each of which is an edge which connects the node to another. This is updated automatically when a network has been created and so should be ignored by parsing plug-ins.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The clusters field contains an ArrayList of Clusters. This should be ignored by parsing plug-ins.
+	<br>
+	<br>
+	Edges have three fields.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The node1 field contains a Node which is one of the two Nodes which the edge connects. This should be initialised by parsing plug-ins.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The node2 field contains a Node which is the other of the two Nodes which the edge connects. This should be initialised by parsing plug-ins.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The weight field contains a double which is the weight of the edge. This should be initialised by parsing plug-ins.
+</p>
+
+<a name="example_code_parsing"><h3>1.4. Example Code</h3></a>
+<p>
+	The following code is from the delimiter-separated values file parser plug-in.
+	<br>
+	the delimiter-separated values file parser plug-in parses files containing values seperated by any delimiter, such as comma-separated values (.csv) files and tab-separated values (.tsv, .tab) files.
+	<br>
+	<div style="background-color:#F0F0F0; max-width:1000px; padding:10px;">
+	public class DelimiterSeparatedValuesFileParser implements FileParserPluginInterface {
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;// comboBoxControl allows the getConfigurationControls and parseFile
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;// methods to share the selectedOptionIndex field of this comboBoxControl
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;public ComboBoxControl comboBoxControl;
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;public String getName() throws Exception {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "Delimiter-separated values file parser";
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;public String getDescription() throws Exception {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "This file parser plug-in parses files containing values seperated by any delimiter, such as comma-separated values (.csv) files and tab-separated values (.tsv, .tab) files.";
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;public ArrayList<PluginConfigurationControl> getConfigurationControls() throws Exception {
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;comboBoxControl = new ComboBoxControl();
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;comboBoxControl.label = "Delimiter Between Values:";
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;comboBoxControl.options = new ArrayList<String>();
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;comboBoxControl.options.add("Commas");
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;comboBoxControl.options.add("Tabs");
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;comboBoxControl.selectedOptionIndex = 0;
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ArrayList<PluginConfigurationControl> controls = new ArrayList<PluginConfigurationControl>();
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;controls.add(comboBoxControl);
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return controls;
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;public void parseFile(File file, ArrayList<Node> networkNodes, ArrayList<Edge> networkEdges) throws Exception {
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// This code creates the networkEdges and networkNodes data
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// structures with the contents of a file.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Scanner scanner = new Scanner(file);
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hashtable<String, Node> hashTable = new Hashtable<String, Node>();
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while (scanner.hasNextLine()) {
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Scanner lineScanner = new Scanner(scanner.nextLine().trim());
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// the delimiter chosen by the user was commas
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (comboBoxControl.options.get(comboBoxControl.selectedOptionIndex).equals("Commas")) {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lineScanner.useDelimiter(",");
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// the delimiter chosen by the user was commas
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (comboBoxControl.options.get(comboBoxControl.selectedOptionIndex).equals("Tabs")) {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lineScanner.useDelimiter("\t");
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Edge edge = new Edge();
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;networkEdges.add(edge);
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String identifier = lineScanner.next().trim();
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (hashTable.containsKey(identifier)) {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edge.node1 = hashTable.get(identifier);
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edge.node1 = new Node();
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edge.node1.label = identifier;
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hashTable.put(identifier, edge.node1);
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;identifier = lineScanner.next().trim();
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (hashTable.containsKey(identifier)) {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edge.node2 = hashTable.get(identifier);
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edge.node2 = new Node();
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edge.node2.label = identifier;
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hashTable.put(identifier, edge.node2);
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edge.weight = Double.valueOf(lineScanner.next().trim());
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lineScanner.close();
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ArrayList<Node> arrayList = new ArrayList<Node>(hashTable.values());
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (Node node : arrayList) {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;networkNodes.add(node);
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scanner.close();
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// This code sorts the Edges in the networkEdges data
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// structure from largest weight field to smallest weight field.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 1; i < networkEdges.size(); i++) {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Edge edge = networkEdges.get(i);
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int j;
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (j = i - 1; j >= 0
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&& edge.weight > networkEdges.get(j).weight; j--) {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;networkEdges.set(j + 1, networkEdges.get(j));
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;networkEdges.set(j + 1, edge);
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// This code creates, for each Edge, the Node.edges data structure of
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// each of its two Nodes.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (Node node : networkNodes) {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node.edges = new ArrayList<Edge>();
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (Edge edge : networkEdges) {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (!edge.node1.edges.contains(edge)) {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edge.node1.edges.add(edge);
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (!edge.node2.edges.contains(edge)) {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edge.node2.edges.add(edge);
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	<br>
+	}
+	</div>
+</p>
+
+<a name="writing_a_clustering_plugin"><h2>2. Writing a Clustering Plug-in</h2></a>
+<p>
+	To write a clustering plug-in for JustClust, you need to have a class which implements the ClusteringAlgorithmPlugin interface from JustClust (justclust.plugins.interfaces.ClusteringAlgorithmPlugin).
+	<br>
+	The class which implements the ClusteringAlgorithmPlugin interface needs to be contained in a jar file.
+	<br>
+	The class should have the same directory structure within the jar file as its package structure (e.g. the class package.subpackage.class should have the file path package/subpackage/class within the jar file).
+	<br>
+	The jar file is your plug-in and can contain other classes which are used by the class which implements the ClusteringAlgorithmPlugin interface.
+	<br>
+	<br>
+	The ClusteringAlgorithmPlugin interface requires the implementing class to have three methods.
+	<br>
+	These are explained below.
+</p>
+
+<a name="the_getname_method_clustering"><h3>2.1. The getName Method</h3></a>
+<p>
+	The getName method should simply return a String.
+	<br>
+	This String is displayed to the user as the name of the plug-in when it is loaded.
+</p>
+
+<a name="the_getconfigurationcontrols_method_clustering"><h3>2.2. The getConfigurationControls Method</h3></a>
+<p>
+	The getConfigurationControls method should return an ArrayList of PluginConfigurationControls (justclust.plugins.configurationcontrols.PluginConfigurationControl).
+	<br>
+	These PluginConfigurationControls are shown to the user to allow them to input information which your plug-in can read and act on accordingly, effectively allowing the user to configure your plug-in.
+	<br>
+	If you do not want your plug-in to be configurable by the user, simply return an empty ArrayList of PluginConfigurationControls.
+	<br>
+	<br>
+	There are currently three types of PluginConfigurationControls: ComboBoxControls (justclust.plugins.configurationcontrols.ComboBoxControl), FileSystemPathControls (justclust.plugins.configurationcontrols.FileSystemPathControl), and TextFieldControls (justclust.plugins.configurationcontrols.TextFieldControl).
+	<br>
+	all of these classes implement the PluginConfigurationControl interface and so can be added to the ArrayList of PluginConfigurationControls which is to be returned.
+	<br>
+	<br>
+	Before you return the ArrayList, you may want to specify a few things about the PluginConfigurationControls within by assigning values to their fields.
+	<br>
+	<br>
+	ComboBoxControls have three fields.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The label field contains a String which is the label which will appear before the control to describe what the user should input into the control.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The options field contains an ArrayList of Strings each of which is one of the options which the user can select from in the ComboBoxControl.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The selectedOptionIndex field contains an int which is the index of the String in the options field ArrayList which is initially selected (a default value).
+	<br>
+	<br>
+	FileSystemPathControls have three fields.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The label field contains a String which is the label which will appear before the control to describe what the user should input into the control.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The text field contains a String which is the text which is initially within the control (a default value).
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The directoriesOnly field contains a boolean which is true if the file system path specified by the user should be a path to a directory rather than a file.
+	<br>
+	<br>
+	TextFieldControls have two fields.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The label field contains a String which is the label which will appear before the control to describe what the user should input into the control.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The text field contains a String which is the text which is initially within the control (a default value).
+	<br>
+	<br>
+	Once the user has input into the PluginConfigurationControls which you specified in this method, and has clicked on the 'Cluster Network' button, the user's input will be made accessible to your plug-in via the fields of the PluginConfigurationControls.
+	<br>
+	The selectedOptionIndex field of ComboBoxControls is updated to the index of the String in the options field ArrayList which is selected by the user.
+	<br>
+	The text field of FileSystemPathControls is updated to the text which is input into the control by the user.
+	<br>
+	The text field of TextFieldControls is updated to the text which is input into the control by the user.
+</p>
+
+<a name="the_clusternetwork_method_clustering"><h3>2.3. The clusterNetwork Method</h3></a>
+<p>
+	The clusterNetwork method should update the networkClusters field of the Data class from JustClust (justclust.Data) with an ArrayList of Clusters (justclust.datastructures.Cluster) which each represent a cluster in the network being clustered.
+	<br>
+	The method can access the networkNodes and networkEdges fields of the Data class to determine how the network should be clustered.
+	<br>
+	These contain ArrayLists of Nodes (justclust.datastructures.Node) and Edges (justclust.datastructures.Edge) respectively.
+	<br>
+	<br>
+	Nodes have three fields.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The identifier field contains a String which is the label of the node. This should be accessed but not changed by clustering plug-ins.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The edges field contains an ArrayList of Edges each of which is an edge which connects the node to another. This should be accessed but not changed by clustering plug-ins.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The clusters field contains an ArrayList of Clusters each of which contains the node. This is updated automatically when a network has been clustered and so should be ignored by clustering plug-ins.
+	<br>
+	<br>
+	Edges have three fields.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The node1 field contains a Node which is one of the two Nodes which the edge connects. This should be accessed but not changed by clustering plug-ins.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The node2 field contains a Node which is the other of the two Nodes which the edge connects. This should be accessed but not changed by clustering plug-ins.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The weight field contains a double which is the weight of the edge. This should be accessed but not changed by clustering plug-ins.
+	<br>
+	<br>
+	Clusters have one field.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The nodes field contains an ArrayList of Nodes which are contained by the cluster. This should be initialised by clustering plug-ins.
+</p>
+
+<a name="example_code_clustering"><h3>2.4. Example Code</h3></a>
+<p>
+	The following code is from the single-linkage clustering algorithm plug-in.
+	<br>
+	the single-linkage clustering algorithm plug-in clusters the current network with a single-linkage clustering algorithm.
+	<br>
+	<div style="background-color:#F0F0F0; max-width:1000px; padding:10px;">
+	/**
+	<br>
+	 * This class contains a method which performs a single linkage clustering
+	<br>
+	 * algorithm.
+	<br>
+	 */
+	<br>
+	public class SingleLinkageClusteringAlgorithm implements
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ClusteringAlgorithmPluginInterface {
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;// textFieldControl allows the getConfigurationControls and clusterNetwork
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;// methods to share the text field of this TextFieldControl
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;public TextFieldControl textFieldControl;
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;/**
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp; * This method returns a display name for the clustering algorithm which a
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp; * method of this class performs.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp; */
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;public String getName() throws Exception {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "Single-linkage clustering algorithm";
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;public String getDescription() throws Exception {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "This clustering algorithm plug-in clusters the current network with a single-linkage clustering algorithm.";
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;public ArrayList<PluginConfigurationControl> getConfigurationControls() throws Exception {
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;textFieldControl = new TextFieldControl();
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;textFieldControl.label = "Number of Clusters:";
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;textFieldControl.text = "50";
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ArrayList<PluginConfigurationControl> controls = new ArrayList<PluginConfigurationControl>();
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;controls.add(textFieldControl);
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return controls;
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;/**
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp; * This method performs a single linkage clustering algorithm.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp; */
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;public void clusterNetwork(ArrayList<Node> networkNodes, ArrayList<Edge> networkEdges, ArrayList<Cluster> networkClusters) throws Exception {
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// This code creates a Cluster for each of the Nodes in the
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// networkNodes data structure. These clusters will be merged
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// during the single linkage clustering algorithm.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (Node node : networkNodes) {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cluster cluster = new Cluster();
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;networkClusters.add(cluster);
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cluster.nodes = new ArrayList<Node>();
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cluster.nodes.add(node);
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node.clusters = new ArrayList<Cluster>();
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node.clusters.add(cluster);
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// This code creates a data structure of Edges called edges which is a
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// shallow copy of the networkEdges data structure. The Edges in
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// the edges data structure are sorted from largest weight field to
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// smallest weight field.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ArrayList<Edge> edges = (ArrayList<Edge>) networkEdges.clone();
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 1; i < edges.size(); i++) {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Edge edge = edges.get(i);
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int j;
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (j = i - 1; j >= 0
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&& edge.weight > edges.get(j).weight; j--) {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edges.set(j + 1, edges.get(j));
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edges.set(j + 1, edge);
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// This code removes Edges from the edges data structure which link a
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Node to itself.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i < edges.size(); i++) {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (edges.get(i).node1 == edges.get(i).node2) {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edges.remove(i);
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i--;
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// This code removes Edges from the edges data structure which link
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Nodes which are already linked by another Edge in the edges data
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// structure.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i < edges.size(); i++) {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int j = i + 1; j < edges.size(); j++) {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (edges.get(i).node1 == edges.get(j).node1
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&& edges.get(i).node2 == edges.get(j).node2
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|| edges.get(i).node1 == edges.get(j).node2
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&& edges.get(i).node2 == edges.get(j).node1) {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edges.remove(j);
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;j--;
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// This code clusters the Nodes in the networkNodes data structure.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// At each stage in the single linkage clustering algorithm, the closest
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// two Clusters are merged.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int i = 0;
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while (networkClusters.size() > Integer.parseInt(textFieldControl.text)) {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (edges.get(i).node1.clusters.get(0) != edges.get(i).node2.clusters.get(0)) {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edges.get(i).node1.clusters
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.get(0).nodes
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.addAll(edges.get(i).node2.clusters.get(0).nodes);
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;networkClusters.remove(edges.get(i).node2.clusters
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.get(0));
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (Node node : edges.get(i).node2.clusters.get(0).nodes) {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node.clusters.set(0,
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edges.get(i).node1.clusters.get(0));
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i++;
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	}
+	</div>
+</p>
+
+<a name="writing_a_visualisation_plugin"><h2>3. Writing a Visualisation Plug-in</h2></a>
+<p>
+	To write a visualisation plug-in for JustClust, you need to have a class which implements the VisualisationLayoutPlugin interface from JustClust (justclust.plugins.interfaces.VisualisationLayoutPlugin).
+	<br>
+	The class which implements the VisualisationLayoutPlugin interface needs to be contained in a jar file.
+	<br>
+	The class should have the same directory structure within the jar file as its package structure (e.g. the class package.subpackage.class should have the file path package/subpackage/class within the jar file).
+	<br>
+	The jar file is your plug-in and can contain other classes which are used by the class which implements the VisualisationLayoutPlugin interface.
+	<br>
+	<br>
+	The VisualisationLayoutPlugin interface requires the implementing class to have three methods.
+	<br>
+	These are explained below.
+</p>
+
+<a name="the_getname_method_visualisation"><h3>3.1. The getName Method</h3></a>
+<p>
+	The getName method should simply return a String.
+	<br>
+	This String is displayed to the user as the name of the plug-in when it is loaded.
+</p>
+
+<a name="the_getconfigurationcontrols_method_visualisation"><h3>3.2. The getConfigurationControls Method</h3></a>
+<p>
+	The getConfigurationControls method should return an ArrayList of PluginConfigurationControls (justclust.plugins.configurationcontrols.PluginConfigurationControl).
+	<br>
+	These PluginConfigurationControls are shown to the user to allow them to input information which your plug-in can read and act on accordingly, effectively allowing the user to configure your plug-in.
+	<br>
+	If you do not want your plug-in to be configurable by the user, simply return an empty ArrayList of PluginConfigurationControls.
+	<br>
+	<br>
+	There are currently three types of PluginConfigurationControls: ComboBoxControls (justclust.plugins.configurationcontrols.ComboBoxControl), FileSystemPathControls (justclust.plugins.configurationcontrols.FileSystemPathControl), and TextFieldControls (justclust.plugins.configurationcontrols.TextFieldControl).
+	<br>
+	all of these classes implement the PluginConfigurationControl interface and so can be added to the ArrayList of PluginConfigurationControls which is to be returned.
+	<br>
+	<br>
+	Before you return the ArrayList, you may want to specify a few things about the PluginConfigurationControls within by assigning values to their fields.
+	<br>
+	<br>
+	ComboBoxControls have three fields.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The label field contains a String which is the label which will appear before the control to describe what the user should input into the control.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The options field contains an ArrayList of Strings each of which is one of the options which the user can select from in the ComboBoxControl.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The selectedOptionIndex field contains an int which is the index of the String in the options field ArrayList which is initially selected (a default value).
+	<br>
+	<br>
+	FileSystemPathControls have three fields.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The label field contains a String which is the label which will appear before the control to describe what the user should input into the control.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The text field contains a String which is the text which is initially within the control (a default value).
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The directoriesOnly field contains a boolean which is true if the file system path specified by the user should be a path to a directory rather than a file.
+	<br>
+	<br>
+	TextFieldControls have two fields.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The label field contains a String which is the label which will appear before the control to describe what the user should input into the control.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The text field contains a String which is the text which is initially within the control (a default value).
+	<br>
+	<br>
+	Once the user has input into the PluginConfigurationControls which you specified in this method, and has clicked on the 'Apply Layout' button, the user's input will be made accessible to your plug-in via the fields of the PluginConfigurationControls.
+	<br>
+	The selectedOptionIndex field of ComboBoxControls is updated to the index of the String in the options field ArrayList which is selected by the user.
+	<br>
+	The text field of FileSystemPathControls is updated to the text which is input into the control by the user.
+	<br>
+	The text field of TextFieldControls is updated to the text which is input into the control by the user.
+</p>
+
+<a name="the_applylayout_method_visualisation"><h3>3.3. The applyLayout Method</h3></a>
+<p>
+	The applyLayout method should use the getXCoordinate, setXCoordinate, getYCoordinate, and setYCoordinate methods of Nodes (justclust.datastructures.Node) in the networkNodes field of the Data class from JustClust (justclust.Data) to reposition the Nodes in the graphical representation of the network.
+	<br>
+	The method can access the networkNodes, networkEdges, and networkClusters fields of the Data class to determine where the Nodes should be placed.
+	<br>
+	These contain ArrayLists of Nodes, Edges (justclust.datastructures.Edge), and Clusters (justclust.datastructures.Cluster) respectively.
+	<br>
+	<br>
+	Nodes have three fields.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The identifier field contains a String which is the label of the node. This should be accessed but not changed by visualisation plug-ins.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The edges field contains an ArrayList of Edges each of which is an edge which connects the node to another. This should be accessed but not changed by visualisation plug-ins.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The clusters field contains an ArrayList of Clusters each of which contains the node. This should be accessed but not changed by visualisation plug-ins.
+	<br>
+	<br>
+	Edges have three fields.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The node1 field contains a Node which is one of the two Nodes which the edge connects. This should be accessed but not changed by visualisation plug-ins.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The node2 field contains a Node which is the other of the two Nodes which the edge connects. This should be accessed but not changed by visualisation plug-ins.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The weight field contains a double which is the weight of the edge. This should be accessed but not changed by visualisation plug-ins.
+	<br>
+	<br>
+	Clusters have one field.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• The nodes field contains an ArrayList of Nodes which are contained by the cluster. This should be accessed but not changed by visualisation plug-ins.
+</p>
+
+<a name="example_code_visualisation"><h3>3.4. Example Code</h3></a>
+<p>
+	The following code is from the Cytoscape grid visualisation layout plug-in.
+	<br>
+	the Cytoscape grid visualisation layout plug-in lays-out the graphical representation of the current network with the grid layout from Cytoscape.
+	<br>
+	<div style="background-color:#F0F0F0; max-width:1000px; padding:10px;">
+	public class CytoscapeGridVisualisationLayout implements VisualisationLayoutPluginInterface {
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;// textFieldControl allows the getConfigurationControls and applyLayout
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;// methods to share the text field of this TextFieldControl
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;public TextFieldControl horizontalSpacingControl;
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;public TextFieldControl verticalSpacingControl;
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;public String getName() throws Exception {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "Cytoscape grid visualisation layout";
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;public String getDescription() throws Exception {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "This visualisation layout plug-in lays-out the graphical representation of the current network with the grid layout from Cytoscape.";
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;public ArrayList<PluginConfigurationControl> getConfigurationControls() throws Exception {
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;horizontalSpacingControl = new TextFieldControl();
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;horizontalSpacingControl.label = "Horizontal Node Spacing:";
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;horizontalSpacingControl.text = "50";
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;verticalSpacingControl = new TextFieldControl();
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;verticalSpacingControl.label = "Vertical Node Spacing:";
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;verticalSpacingControl.text = "40";
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ArrayList<PluginConfigurationControl> controls = new ArrayList<PluginConfigurationControl>();
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;controls.add(horizontalSpacingControl);
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;controls.add(verticalSpacingControl);
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return controls;
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;public void applyLayout(ArrayList<Node> networkNodes, ArrayList<Edge> networkEdges, ArrayList<Cluster> networkClusters) throws Exception {
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;double nodeHorizontalSpacing = Integer.parseInt(horizontalSpacingControl.text);
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;double nodeVerticalSpacing = Integer.parseInt(verticalSpacingControl.text);
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;double currX = 0.0d;
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;double currY = 0.0d;
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;double initialX = 0.0d;
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;double initialY = 0.0d;
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Yes, our size and starting points need to be different
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// the nodeCount is set to 0 so that, if there are no nodes, the rest
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// of this method will not try to access nodes which don't exist,
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// causing an error.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// networkNodes != null is checked so that
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// networkNodes.size() is not called when
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// networkNodes == null which will cause an
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// error.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int nodeCount = 0;
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (networkNodes != null) {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nodeCount = networkNodes.size();
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;final int columns = (int) Math.sqrt(nodeCount);
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Calculate our starting point as the geographical center of the
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// selected nodes.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 1; i < networkNodes.size(); i++) {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;initialX += (networkNodes.get(i).getGraphicalNodeXCoordinate() / nodeCount);
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;initialY += (networkNodes.get(i).getGraphicalNodeYCoordinate() / nodeCount);
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// initialX and initialY reflect the center of our grid, so we
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// need to offset by distance*columns/2 in each direction
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;initialX = initialX - ((nodeHorizontalSpacing * (columns - 1)) / 2);
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;initialY = initialY - ((nodeVerticalSpacing * (columns - 1)) / 2);
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currX = initialX;
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currY = initialY;
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int count = 0;
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Set visual property.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// TODO: We need batch apply method for Visual Property values for
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// performance.
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (int i = 0; i < networkNodes.size(); i++) {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Node node = networkNodes.get(i);
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node.setGraphicalNodeXCoordinate(currX);
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node.setGraphicalNodeYCoordinate(currY);
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;count++;
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (count == columns) {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;count = 0;
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currX = initialX;
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currY += nodeVerticalSpacing;
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;currX += nodeHorizontalSpacing;
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;}
+	<br>
+	}
+	</div>
+</p>
+
+</body>
+
+</html>   
+

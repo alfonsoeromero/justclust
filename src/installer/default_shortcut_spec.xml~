@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<shortcuts>
+    <skipIfNotSupported/>
+    <programGroup defaultName="JustClust" location="applications"/>
+    <shortcut
+        name="JustClust"
+        target="$INSTALL_PATH/JustClust.jar"
+        workingDirectory="$INSTALL_PATH"
+        iconFile="$INSTALL_PATH/img/justclust_icon.png"
+        iconIndex="0"
+        initialState="noShow"
+        programGroup="yes"
+        desktop="yes"
+        applications="no"
+        startMenu="yes"
+        startup="no">
+    </shortcut>
+    <shortcut
+        name="Uninstall JustClust"
+        target="$INSTALL_PATH/Uninstaller/uninstaller.jar"
+        workingDirectory="$INSTALL_PATH"
+        iconFile=""
+        iconIndex="0"
+        initialState="noShow"
+        programGroup="yes"
+        desktop="no"
+        applications="no"
+        startMenu="yes"
+        startup="no">
+    </shortcut>
+</shortcuts>
