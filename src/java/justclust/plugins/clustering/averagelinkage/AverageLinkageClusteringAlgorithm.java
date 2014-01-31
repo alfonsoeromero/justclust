@@ -355,10 +355,12 @@ public class AverageLinkageClusteringAlgorithm implements ClusteringAlgorithmPlu
         
     }
 
+    @Override
     public boolean hierarchicalClustering() {
         return true;
     }
 
+    @Override
     public ArrayList<DendrogramCluster> rootDendrogramClusters() {
         return rootDendrogramClusters;
     }
